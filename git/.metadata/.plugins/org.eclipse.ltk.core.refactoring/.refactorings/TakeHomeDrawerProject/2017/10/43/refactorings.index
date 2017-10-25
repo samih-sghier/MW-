@@ -1,2 +1,4 @@
 1508945662857	Rename field 'color'
 1508946941231	Rename field 'color'
+1508950862398	Rename local variable 'colorSelectionButton'
+1508950882506	Rename local variable 'fillcolorSelectionButton'

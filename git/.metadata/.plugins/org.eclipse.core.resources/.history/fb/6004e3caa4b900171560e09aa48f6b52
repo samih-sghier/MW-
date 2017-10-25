@@ -1,5 +1,5 @@
 package drawer6.figure;
-// Name:
+// Name: 
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,16 +18,33 @@ import drawer6.DrawingFrame;
 public abstract class Figure implements Cloneable {
 	private Rectangle boundingRect;
 	private boolean isSelected;
-	
+	private Color outlineColor;
+	private Color fillColor;
 
 	public Figure(int x, int y, int w, int h) {
 		this.boundingRect = new Rectangle(x, y, w, h);
 		isSelected = false;
+		this.outlineColor=outlineColor.black;
+		this.fillColor=outlineColor.black;
+	}
+	public void setOutlineColor(Color color){
+		this.outlineColor=color;
+	}
+	public void setFillColor(Color color){
+		this.fillColor=color;
 	}
 
 	public void move(int dx, int dy) {
 		boundingRect.x += dx;
 		boundingRect.y += dy;
+	}
+	//Gets the Outline color for the children when re group
+	public Color getOutlineColor(){
+		return outlineColor;
+	}
+	//Gets the shape color for the children when re group
+	public Color getShapeColor(){
+		return fillColor;
 	}
 
 	public void moveTo(int x, int y) {
@@ -81,17 +98,13 @@ public abstract class Figure implements Cloneable {
 	 * @param g
 	 *            the Graphics object that does the drawing
 	 */
-	public void draw(Graphics g, Color color) {	
-		if(isSelected){
-        g.setColor(color);
-        drawShape(g);
-		}
-		drawShape(g);
-		
-		
+	public void draw(Graphics g) {	
+		 // g.setColor(color);
+		//Added two parameters in the abstract method so it would draw both an outline and the fill Color
+          drawShape(g,outlineColor,fillColor);     
 		if (isSelected)
-			highlightBoundingRect(g);
-	
+			highlightBoundingRect(g);	
+		    
 		
 	}
 
@@ -116,7 +129,7 @@ public abstract class Figure implements Cloneable {
 	 *            the Graphics object that does the drawing
 	 */
 
-	public abstract void drawShape(Graphics g);
+	public abstract void drawShape(Graphics g,Color outlineColor,Color fillColor);
      
 
 	// default behavior is that the list contains only this Figure.

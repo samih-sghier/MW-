@@ -1,0 +1,16 @@
+package drawer6.figure;
+import java.awt.*;
+
+/**
+ * This class represents an elliptical figure.
+ * 
+ * @author Dale Skrien
+ * @version 1.0 August 2005
+ */
+public class Circle extends Ellipse {
+	public Circle(int x, int y, int w) {
+		super(x, y, w, w);
+	}
+
+
+}
