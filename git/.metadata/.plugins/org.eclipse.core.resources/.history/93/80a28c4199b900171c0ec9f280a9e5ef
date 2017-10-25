@@ -1,0 +1,132 @@
+package drawer6;
+// Name:
+
+import javax.swing.*;
+
+import drawer6.figure.Figure;
+
+import java.awt.*;
+import java.util.Iterator;
+
+/**
+ * This class represents the drawing canvas on which figures are drawn.
+ * 
+ * @author Dale Skrien
+ * @version 1.0 August 2005
+ */
+public class DrawingCanvas extends JPanel {
+	private Drawing drawing;
+	private Rectangle selectionRect;
+	private Color color;
+
+	public DrawingCanvas() {
+		this.drawing = new Drawing();
+		this.selectionRect = new Rectangle();
+		setPreferredSize(new Dimension(400, 300));
+		setBorder(BorderFactory.createEtchedBorder());
+		setBackground(Color.white);
+	}
+
+	public void paintComponent(Graphics g) {
+		// draw the figures and the selection rectangle
+		
+		super.paintComponent(g);
+		
+		for (Figure figure : drawing) {
+			
+			figure.draw(g);
+			
+		}
+		
+		if (selectionRect.width > 0 || selectionRect.height > 0) {
+			Color oldColor = g.getColor();
+			g.setColor(Color.blue);
+			g.drawRect(selectionRect.x, selectionRect.y, selectionRect.width,
+					selectionRect.height);
+			g.setColor(oldColor);
+		}
+	}
+
+	public void addFigure(Figure newFigure) {
+		drawing.addFigure(newFigure);
+		repaint();
+	}
+	
+	
+
+	public void setSelectionRect(Point corner1, Point corner2) {
+		selectionRect.setSize(0, 0);
+		selectionRect.setLocation(corner1);
+		selectionRect.add(corner2);
+		repaint();
+	}
+
+	public void shrinkSelectionRect() {
+		selectionRect.setSize(0, 0);
+		repaint();
+	}
+	
+
+	public void unselectAll() {
+		drawing.unselectAll();
+		repaint();
+	}
+
+	public Figure getFigureContaining(int x, int y) {
+		return drawing.getFigureContaining(x, y);
+	}
+
+	public void moveSelectedFigures(int dx, int dy) {
+		drawing.moveSelectedFigures(dx, dy);
+		repaint();
+	}
+	public void selectColor(Color c){
+		drawing.selectColor( c);
+	}
+
+	public void groupSelectedFigures() {
+		drawing.groupSelectedFigures();
+		repaint();
+	}
+
+	public void ungroupSelectedFigures() {
+		drawing.ungroupSelectedFigures();
+		repaint();
+	}
+	public void deleteSelectedFigures() {
+		drawing.removeSelectedFigures();
+		repaint();
+	}
+
+	public void selectFigure(Figure figure) {
+		drawing.selectFigure(figure);
+		repaint();
+	}
+	
+
+	public void selectFiguresIntersectingRect() {
+		drawing.selectFiguresIntersecting(selectionRect);
+		repaint();
+	}
+
+	public State createMemento() {
+		return new State();
+	}
+
+	public void restoreState(State canvasState) {
+		canvasState.restore();
+		repaint();
+	}
+
+	public class State {
+		private Drawing drawing;
+
+		public State() {
+			drawing = (Drawing) DrawingCanvas.this.drawing.clone();
+		}
+
+		public void restore() {
+			DrawingCanvas.this.drawing = (Drawing) drawing.clone();
+		}
+	}
+}
