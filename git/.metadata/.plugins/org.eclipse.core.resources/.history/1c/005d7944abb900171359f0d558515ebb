@@ -1,0 +1,144 @@
+package drawer6.figure;
+// Name: 
+
+import java.awt.*;
+import java.util.ArrayList;
+
+import drawer6.DrawingFrame;
+
+/**
+ * This abstract class is the superclass of all figures drawn in the drawing
+ * canvas. It implements all the methods for dealing with selection,
+ * intersection, movement, and highlighting. It has an abstract drawShape
+ * method.
+ * 
+ * @author Dale Skrien
+ * @version 1.0 August 2005
+ */
+public abstract class Figure implements Cloneable {
+	private Rectangle boundingRect;
+	private boolean isSelected;
+	private Color outlineColor;
+	private Color fillColor;
+    //Added the fillColor and outlineColor 
+	public Figure(int x, int y, int w, int h) {
+		this.boundingRect = new Rectangle(x, y, w, h);
+		isSelected = false;
+		this.outlineColor=outlineColor.black;
+		this.fillColor=fillColor.black;
+	}
+	//Sets the OutlineColor to the color passed in from the RVB Selection pane
+	public void setOutlineColor(Color color){
+		this.outlineColor=color;
+	}
+	//Sets the FillColor to the color passed in from the RVB Selection pane
+	public void setFillColor(Color color){
+		this.fillColor=color;
+	}
+
+	public void move(int dx, int dy) {
+		boundingRect.x += dx;
+		boundingRect.y += dy;
+	}
+	//Gets the Outline color for the children when re group
+	public Color getOutlineColor(){
+		return outlineColor;
+	}
+	//Gets the shape color for the children when re group
+	public Color getShapeColor(){
+		return fillColor;
+	}
+
+	public void moveTo(int x, int y) {
+		boundingRect.x = x;
+		boundingRect.y = y;
+	}
+
+	public void setSize(int width, int height) {
+		boundingRect.width = width;
+		boundingRect.height = height;
+	}
+
+	/**
+	 * @return the smallest Rectangle bounding this figure
+	 */
+	public Rectangle getBoundingRect() {
+		return new Rectangle(boundingRect);
+	}
+
+	public boolean contains(int px, int py) {
+		return boundingRect.contains(px, py);
+	}
+
+	public Object clone() {
+		try {
+			Figure clone = (Figure) super.clone();
+			clone.boundingRect = (Rectangle) boundingRect.clone();
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			assert false; // this block should never execute
+			return null;
+		}
+	}
+
+	public boolean intersects(Rectangle selectionRect) {
+		return boundingRect.intersects(selectionRect);
+	}
+
+	public void setSelected(boolean b) {
+		isSelected = b;
+	}
+
+	public boolean isSelected() {
+		return isSelected;
+	}
+
+
+	/**
+	 * draws this figure, including highlighting
+	 * 
+	 * @param g
+	 *            the Graphics object that does the drawing
+	 */
+	public void draw(Graphics g) {	
+		 // g.setColor(color);
+		//Added two parameters in the abstract method so it would draw both an outline and the fill Color
+          drawShape(g,outlineColor,fillColor);     
+		if (isSelected)
+			highlightBoundingRect(g);	
+		    
+		
+	}
+
+	private void highlightBoundingRect(Graphics g) {
+		Color oldColor = g.getColor();
+		g.setColor(Color.green);
+		int x = boundingRect.x;
+		int y = boundingRect.y;
+		int w = boundingRect.width;
+		int h = boundingRect.height;
+		g.drawRect(x - 3, y - 3, 6, 6);
+		g.drawRect(x + w - 3, y - 3, 6, 6);
+		g.drawRect(x - 3, y + h - 3, 6, 6);
+		g.drawRect(x + w - 3, y + h - 3, 6, 6);
+		g.setColor(oldColor);
+	}
+
+	/**
+	 * draws the underlying shape ignoring highlighting
+	 * 
+	 * @param g
+	 *            the Graphics object that does the drawing
+	 */
+	//Added two parameters in the abstract method so it would draw both an outline and the fill Color
+	public abstract void drawShape(Graphics g,Color outlineColor,Color fillColor);
+     
+
+	// default behavior is that the list contains only this Figure.
+	public ArrayList<Figure> getComposedFigures() {
+		ArrayList<Figure> list = new ArrayList<Figure>();
+		list.add(this);
+	
+		return list;
+	}
+}
