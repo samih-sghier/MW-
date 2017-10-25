@@ -12,5 +12,7 @@
 		<item value="272" key="size.x"/>
 	</section>
 	<section name="completion_proposal_size">
+		<item value="798" key="size.y"/>
+		<item value="272" key="size.x"/>
 	</section>
 </section>
